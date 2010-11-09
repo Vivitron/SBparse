@@ -1,0 +1,7 @@
+A simple shadowbane parser, enjoy.
+
+See devinfo, or the Decisive forums for detailed instructions.
+
+Run ./serv.py, and point your browser to http://localhost:8000
+
+or run firstout.py in the terminal.

@@ -1,0 +1,64 @@
+This project offers a simple way to flexibly view data from logs of Shadow Bane PvP. 
+     	     For example - who did the most damage? Who did the most healing?
+	     
+Overview:
+cgi-bin/webout.py (web interface) or firstout.py (cli) calls sbparser.py to parse
+		  the logfile, then calls sbfunc.py organizes the parsed data.
+		  Webout/firstout then displays the data. 
+
+Development documentation and api by file:
+
+sbparser.py takes a log file and formats the info into a (list?) of lists of
+tuples that each include the info from one line of the log. It includes the classes
+	    LogParse
+		LogParse.make_list() takes a logfile as an argument and returns
+		      damage info, pvpinfo (kills), effectdata (stun/pb),
+		      exceptions (stuff our parser is still missing)
+	        Example: sbparser.LogParse('/path/to/logfile.txt').make_list()[0]
+			 should return the damage tuples
+	    DmgParse
+		used by LogParse to generate the damage info
+		BUG: fury poison stam drain reports as damaging the fury, doesn't
+		report spell (see ohofu in blcpkm.txt
+	    PvpParse
+		used by LogParse to generate the pvp info
+	    EffectParse
+		used by LogParse to generate the effect info
+	    MissedParse
+		used by LogParse to generate the missed lines	    
+	    
+sbfunc.py filters, condenses, and orders the data from sbparser using the functions:
+	  genericsort(data, actor, target, damageamount, resisttype, pdtype, spell)
+	  		    data should be a [0] from a sbparse.LogParse(logfile).make_list()
+			    call. The rest of the arguments can either be blank (don't distenguish)
+			    y (distenguish these values) or a string (filter by this string)
+			    KLUDGE: the use of the ndata variable could be fixed
+	  pvpsort(data, actor, actguild, target, targuild)
+	  		data should be a [1] from a sbparse.LogParse(logfile).make_list()
+			the guild info is currently that given directly from kill spam, and
+			so is unreliable.
+	 testhardcall()
+		prints the damage info distinguishing by all fields that genericsort allows
+
+firstout.py is a command line interface for sbfunc and sbparser.
+	    
+/cgi-bin/webout.py is the web interface.
+	 to use run serv.py then take your browser to http://localhost:8000/cgi-bin/webout.py
+	 at this point it only has damage and pvpinfo parsing
+	
+logtocsv.py converts a log file into a csv file which includes all of our currently
+	    	     parsed information but none of the unparsed information.
+		     The headings on the first line explain what data is in each
+		     comma column. 
+
+ISSUES:
+
+1. We don't use re.compile, and profiling show
+      that significant time is being spent with re _compile
+      at runtime. 
+2. Killer/dead tuple entries could be axed, with actor/target used in place.
+
+3. Webout doesn't deal with effect data. 
+3a. Webout doesn't have a non-summing option.
+3b. Webout doesn't have a timestamp-range option.
+3c. Webout doesn't display any timestamps.
