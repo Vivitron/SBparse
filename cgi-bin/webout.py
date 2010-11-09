@@ -20,7 +20,7 @@ SBParsweb alpha 0.1
 Log file is a relative path, one level up from server. Enter y in a field to 
 sort by that field, or type any other string to filter that field by  the
 string. Kill info is at the bottom.<P>
-For example, try /logs/logname.txt for the file name and y for the actor. <p>
+For example, try logname.txt for the file name and y for the actor. <p>
 file:
 <INPUT TYPE=text NAME=filename VALUE='' SIZE=50><P>
 actor:
