@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # sbfunc.py
 
-#tuple form is  timestamp, actor, target, damageamount, resisttype, pdtype, spell
-
+# tuple form is
 # 0 = timestamp
 # 1 = actor
 # 2 = target
